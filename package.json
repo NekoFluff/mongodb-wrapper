@@ -22,6 +22,10 @@
     "mongodb",
     "typescript"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NekoFluff/mongodb-wrapper"
+  },
   "dependencies": {
     "dotenv": "^10.0.0",
     "mongodb": "^3.6.8"
