@@ -1,5 +1,5 @@
 {
-  "name": "mongodb-wrapper",
+  "name": "@anou/mongodb-wrapper",
   "version": "0.0.1",
   "description": "Typescript wrapper around mongodb",
   "main": "dist/index.js",
@@ -24,11 +24,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NekoFluff/mongodb-wrapper"
+    "url": "git+https://github.com/NekoFluff/mongodb-wrapper.git"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
     "mongodb": "^3.6.8",
     "mongodb-client-encryption": "^1.2.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/NekoFluff/mongodb-wrapper/issues"
+  },
+  "homepage": "https://github.com/NekoFluff/mongodb-wrapper#readme"
 }
