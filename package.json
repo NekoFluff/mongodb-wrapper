@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0",
-    "mongodb": "^3.6.8"
+    "mongodb": "^3.6.8",
+    "mongodb-client-encryption": "^1.2.3"
   }
 }

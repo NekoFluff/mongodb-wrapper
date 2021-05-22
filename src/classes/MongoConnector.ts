@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 export default class MongoConnector {
   private static mongodbClient: MongoClient;
