@@ -1,0 +1,29 @@
+{
+  "name": "mongodb-wrapper",
+  "version": "0.0.1",
+  "description": "Typescript wrapper around mongodb",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "author": "Alexander Nou",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongodb": "^3.6.16",
+    "typescript": "^4.2.4"
+  },
+  "keywords": [
+    "mongodb",
+    "typescript"
+  ],
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "mongodb": "^3.6.8"
+  }
+}
