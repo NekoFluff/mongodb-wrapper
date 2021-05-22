@@ -1,5 +1,5 @@
 {
-  "name": "@anou/mongodb-wrapper",
+  "name": "@asnou/mongodb-wrapper",
   "version": "0.0.1",
   "description": "Typescript wrapper around mongodb",
   "main": "dist/index.js",
