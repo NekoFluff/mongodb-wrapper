@@ -92,9 +92,8 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
 
     const x = overrideClassType || this.classType;
     dataArray.map(function (obj: any) {
-      dataObjects[obj["_id"]] = Object.assign(new x(), obj);
+      dataObjects[obj["_id"].toString()] = Object.assign(new x(), obj);
     });
-
     return dataObjects;
   }
 }
