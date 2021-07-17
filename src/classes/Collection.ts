@@ -1,7 +1,7 @@
 import { MongoDBDocument, Instantiable } from "../types/MongoDBTypes";
 import ICollection, { UpdateOptions } from "../interfaces/ICollection";
 import MongoConnector from "./MongoConnector";
-import { BulkWriteOperation, CollectionBulkWriteOptions } from "mongodb";
+import { AnyBulkWriteOperation, BulkWriteOptions } from "mongodb";
 
 export default class Collection<T extends MongoDBDocument> implements ICollection<T> {
   db = "db-name-unset";
@@ -68,7 +68,7 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
     return await collection.bulkWrite(bulkWriteOperations, bulkWriteOptions);
   }
 
-  async bulkWrite(bulkWriteOperations: BulkWriteOperation<any>[], options: CollectionBulkWriteOptions) {
+  async bulkWrite(bulkWriteOperations: AnyBulkWriteOperation<any>[], options: BulkWriteOptions) {
     const collection = await this.getCollection();
     return await collection.bulkWrite(bulkWriteOperations, options);
   }
