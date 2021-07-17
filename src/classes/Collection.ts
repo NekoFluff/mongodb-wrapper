@@ -1,6 +1,7 @@
 import { MongoDBDocument, Instantiable } from "../types/MongoDBTypes";
-import ICollection from "../interfaces/ICollection";
+import ICollection, { UpdateOptions } from "../interfaces/ICollection";
 import MongoConnector from "./MongoConnector";
+import { BulkWriteOperation, CollectionBulkWriteOptions } from "mongodb";
 
 export default class Collection<T extends MongoDBDocument> implements ICollection<T> {
   db = "db-name-unset";
@@ -47,27 +48,39 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
     return this.dataToObject<T2>(rawData, overrideClassType);
   }
 
-  // Effectively replaceAll
-  async update(items: T[], upsert = false) {
+  /**
+   * Effectively replaceAll
+  */
+  async update(items: T[], options: UpdateOptions = {}) {
     const collection = await this.getCollection();
-    const options = { ordered: true };
 
     const bulkWriteOperations = items.map((item) => {
       return {
         replaceOne: {
-          filter: { _id: item._id },
+          filter: options.filter ?? { _id: item._id },
           replacement: item,
-          upsert: upsert,
+          upsert: options.upsert ?? false,
         },
       };
     });
 
+    const bulkWriteOptions = { ordered: true };
+    return await collection.bulkWrite(bulkWriteOperations, bulkWriteOptions);
+  }
+
+  async bulkWrite(bulkWriteOperations: BulkWriteOperation<any>[], options: CollectionBulkWriteOptions) {
+    const collection = await this.getCollection();
     return await collection.bulkWrite(bulkWriteOperations, options);
   }
 
-  async delete(filter: any) {
+  async deleteOne(filter: any) {
     const collection = await this.getCollection();
     return await collection.deleteOne(filter);
+  }
+
+  async deleteMany(filter: any) {
+    const collection = await this.getCollection();
+    return await collection.deleteMany(filter);
   }
 
   dataToObject<T2 = T>(
