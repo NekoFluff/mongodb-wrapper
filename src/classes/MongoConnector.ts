@@ -8,11 +8,10 @@ export default class MongoConnector {
   private static mongodbClient: MongoClient;
 
   static async getMongoDbClient(options?: MongoClientOptions) {
-    if (this.mongodbClient) {
-      return this.mongodbClient;
-    } else {
-      return await this.connectToMongo(options)
+    if (!this.mongodbClient) {
+      this.mongodbClient = await this.connectToMongo(options);
     }
+    return this.mongodbClient
   }
 
   private static async connectToMongo(options?: MongoClientOptions) {
