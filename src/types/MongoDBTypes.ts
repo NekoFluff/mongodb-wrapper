@@ -5,5 +5,5 @@ export interface Instantiable<T> {
 }
 
 export interface MongoDBDocument extends Document {
-  _id: ObjectId | string | number | any;
+  _id?: ObjectId | string | number | any;
 }
