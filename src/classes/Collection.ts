@@ -49,7 +49,7 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
   }
 
   async aggregate<T2 = T>(
-    aggregation: Document[],
+    aggregation: any[],
     overrideClassType?: Instantiable<T2>
   ): Promise<Record<string, T2>> {
     const collection = await this.getCollection();
