@@ -1,6 +1,6 @@
 {
   "name": "@asnou/mongodb-wrapper",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Typescript wrapper around mongodb",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -11,12 +11,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
+    "build-dev": "tsc-watch",
     "prepare": "npm run build"
   },
   "author": "Alexander Nou",
   "license": "ISC",
   "devDependencies": {
     "@types/mongodb": "^3.6.20",
+    "tsc-watch": "^4.4.0",
     "typescript": "^4.3.5"
   },
   "keywords": [
