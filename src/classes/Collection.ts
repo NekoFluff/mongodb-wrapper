@@ -1,7 +1,7 @@
 import { MongoDBDocument, Instantiable } from "../types/MongoDBTypes";
 import ICollection, { UpdateOptions } from "../interfaces/ICollection";
 import MongoConnector from "./MongoConnector";
-import { AnyBulkWriteOperation, BulkWriteOptions } from "mongodb";
+import { AnyBulkWriteOperation, BulkWriteOptions, Filter } from "mongodb";
 
 export default class Collection<T extends MongoDBDocument> implements ICollection<T> {
   db = "db-name-unset";
@@ -29,7 +29,7 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
   }
 
   async find<T2 = T>(
-    filter: any,
+    filter: Filter<T>,
     overrideClassType?: Instantiable<T2>
   ): Promise<Record<string, T2>> {
     const collection = await this.getCollection();
@@ -38,14 +38,39 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
     return this.dataToObject<T2>(rawData, overrideClassType);
   }
 
+  async findOne<T2 = T>(
+    filter: Filter<T>,
+    overrideClassType?: Instantiable<T2>
+  ): Promise<Record<string, T2>> {
+    const collection = await this.getCollection();
+    const result = await collection.findOne(filter);
+    const rawData = [result];
+    return this.dataToObject<T2>(rawData, overrideClassType);
+  }
+
   async aggregate<T2 = T>(
-    aggregation: any,
+    aggregation: Document[],
     overrideClassType?: Instantiable<T2>
   ): Promise<Record<string, T2>> {
     const collection = await this.getCollection();
     const result = await collection.aggregate(aggregation);
     const rawData = await result.toArray();
     return this.dataToObject<T2>(rawData, overrideClassType);
+  }
+
+  /**
+   * Returns the total number of documents
+   * @returns Total number of documents
+   */
+  async getTotalCount(groupBy: any = null) {
+    const pipeline = [
+      { $group: { _id: groupBy, totalCount: { $sum: 1 } } },
+      { $project: { _id: 0 } },
+    ];
+
+    const collection = await this.getCollection();
+    const result = await collection.aggregate(pipeline).next();
+    return result!.totalCount as number;
   }
 
   /**
@@ -73,18 +98,18 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
     return await collection.bulkWrite(bulkWriteOperations, options);
   }
 
-  async deleteOne(filter: any) {
+  async deleteOne(filter: Filter<MongoDBDocument>) {
     const collection = await this.getCollection();
     return await collection.deleteOne(filter);
   }
 
-  async deleteMany(filter: any) {
+  async deleteMany(filter: Filter<MongoDBDocument>) {
     const collection = await this.getCollection();
     return await collection.deleteMany(filter);
   }
 
   dataToObject<T2 = T>(
-    rawData: any,
+    rawData: any[],
     overrideClassType?: Instantiable<T2>
   ): Record<string, T2> {
     let dataArray = JSON.parse(JSON.stringify(rawData));

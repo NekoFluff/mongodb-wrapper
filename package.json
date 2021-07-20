@@ -1,6 +1,6 @@
 {
   "name": "@asnou/mongodb-wrapper",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Typescript wrapper around mongodb",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
