@@ -4,18 +4,20 @@ import MongoConnector from "./MongoConnector";
 import { AnyBulkWriteOperation, BulkWriteOptions, Filter } from "mongodb";
 
 export default class Collection<T extends MongoDBDocument> implements ICollection<T> {
+  url?: string
   db = "db-name-unset";
   collection = "collection-name-unset";
   classType: Instantiable<T>;
 
-  constructor(db: string, collection: string, classType: Instantiable<T>) {
+  constructor(db: string, collection: string, classType: Instantiable<T>, url?: string) {
+    this.url = url;
     this.db = db;
     this.collection = collection;
     this.classType = classType;
   }
 
   async getDb() {
-    return (await MongoConnector.getMongoDbClient()).db(this.db);
+    return (await MongoConnector.getMongoDbClient(this.url)).db(this.db);
   }
 
   async getCollection() {
@@ -62,15 +64,15 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
    * Returns the total number of documents
    * @returns Total number of documents
    */
-  async getTotalCount(groupBy: any = null) {
+  async getTotalCount(groupBy: string | Document, match: Filter<T> = {}) {
     const pipeline = [
+      { $match: match },
       { $group: { _id: groupBy, totalCount: { $sum: 1 } } },
-      { $project: { _id: 0 } },
     ];
 
     const collection = await this.getCollection();
-    const result = await collection.aggregate(pipeline).next();
-    return result!.totalCount as number;
+    const result = await collection.aggregate(pipeline).toArray();
+    return result as { _id: any, totalCount: number }[];
   }
 
   /**

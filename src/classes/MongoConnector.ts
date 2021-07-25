@@ -1,24 +1,29 @@
 import { MongoClient, MongoClientOptions } from "mongodb";
-import dotenv from "dotenv";
-dotenv.config();
 
 const defaultMongoClientOptions: MongoClientOptions = {};
 
 export default class MongoConnector {
-  private static mongodbClient: MongoClient;
+  private static defaultConnectionURL = ""
+  private static clients: { [key: string]: MongoClient } = {};
 
-  static async getMongoDbClient(options?: MongoClientOptions) {
-    if (!this.mongodbClient) {
-      this.mongodbClient = await this.connectToMongo(options);
-    }
-    return this.mongodbClient
+  static setDefaultConnectionURL(url: string) {
+    this.defaultConnectionURL = url;
   }
 
-  private static async connectToMongo(options?: MongoClientOptions) {
-    if (process.env.MONGO_CONNECTION_URL) {
-      return await MongoClient.connect(process.env.MONGO_CONNECTION_URL, options ?? defaultMongoClientOptions);
+  static async getMongoDbClient(url?: string, options?: MongoClientOptions) {
+    url = url ?? this.defaultConnectionURL;
+
+    if (!this.clients[url]) {
+      this.clients[url] = await this.connectToMongo(url ?? this.defaultConnectionURL, options);
+    }
+    return this.clients[url]
+  }
+
+  private static async connectToMongo(url: string, options?: MongoClientOptions) {
+    if (url) {
+      return await MongoClient.connect(url, options ?? defaultMongoClientOptions);
     } else {
-      throw new Error("MONGO_CONNECTION_URL environment variable not set. Cannot connect to DB.")
+      throw new Error(`Connection url ${url} is invalid.`)
     }
   }
 }

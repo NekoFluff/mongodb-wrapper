@@ -1,7 +1,8 @@
-# .env variables
-MONGO_CONNECTION_URL=The mongo connection url
+# How to use
+Set the MongoConnector's default connection url (Can be overrided when subclassing the `Collection` class)
+`MongoConnector.setDefaultConnectionURL(url);`
 
-Repository example
+Repository/Collection example
 ```
 import { Collection } from "@asnou/mongodb-wrapper";
 
