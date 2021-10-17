@@ -2,6 +2,7 @@ import { MongoDBDocument, Instantiable } from "../types/MongoDBTypes";
 import ICollection, { UpdateOptions } from "../interfaces/ICollection";
 import MongoConnector from "./MongoConnector";
 import { AnyBulkWriteOperation, BulkWriteOptions, Filter } from "mongodb";
+import { Document } from "mongodb";
 
 export default class Collection<T extends MongoDBDocument> implements ICollection<T> {
   url?: string
@@ -31,7 +32,7 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
   }
 
   async find<T2 = T>(
-    filter: Filter<T>,
+    filter: Filter<Document>,
     overrideClassType?: Instantiable<T2>
   ): Promise<Record<string, T2>> {
     const collection = await this.getCollection();
@@ -41,7 +42,7 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
   }
 
   async findOne<T2 = T>(
-    filter: Filter<T>,
+    filter: Filter<Document>,
     overrideClassType?: Instantiable<T2>
   ): Promise<Record<string, T2>> {
     const collection = await this.getCollection();
