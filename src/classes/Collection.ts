@@ -115,12 +115,12 @@ export default class Collection<T extends MongoDBDocument> implements ICollectio
     rawData: any[],
     overrideClassType?: Instantiable<T2>
   ): Record<string, T2> {
-    let dataArray = JSON.parse(JSON.stringify(rawData));
     let dataObjects: any = {};
 
-    const x = overrideClassType || this.classType;
-    dataArray.map(function (obj: any) {
-      dataObjects[obj["_id"].toString()] = Object.assign(new x(), obj);
+    const targetClassType = overrideClassType || this.classType;
+    rawData.map(function (obj: any) {
+      const newObj: any = new targetClassType();
+      dataObjects[obj["_id"].toString()] = Object.assign(newObj, obj);
     });
     return dataObjects;
   }
